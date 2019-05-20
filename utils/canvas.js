@@ -8,7 +8,11 @@ export default {
     // 绘制圆形进度条方法
     run(c, w, h) {
       let that = this;
-      var num = (2 * Math.PI / 100 * c) - 0.5 * Math.PI;
+      //2*Π是因为一个圆是由两个扇形组成
+      //100为百分比的总比例
+      //c为当前百分比
+      //-0.5为起始弧度1/2 因为圆是两个扇形组成 所以1/2
+      var num = (2 * Math.PI / 100 * c) -0.5 * Math.PI;
       that.data.ctx2.arc(w, h, w - 8, -0.5 * Math.PI, num); //每个间隔绘制的弧度
       that.data.ctx2.setStrokeStyle("#ff5000");
       that.data.ctx2.setLineWidth("6");
@@ -50,6 +54,7 @@ export default {
       var time = this.data.animTime / this.data.percentage;
       wx.createSelectorQuery().select('#' + id).boundingClientRect(function(rect) { //监听canvas的宽高
         var w = parseInt(rect.width / 2);
+        console.log(w)
         var h = parseInt(rect.height / 2);
         this.canvasTap(0, this.data.percentage, time, w, h)
       }.bind(this)).exec();
