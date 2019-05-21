@@ -11,8 +11,8 @@ export default {
       //2*Π是因为一个圆是由两个扇形组成
       //100为百分比的总比例
       //c为当前百分比
-      //-0.5为起始弧度1/2 因为圆是两个扇形组成 所以1/2
-      var num = (2 * Math.PI / 100 * c) -0.5 * Math.PI;
+      //0.5为 公式 l=n°πr÷180°
+      var num = (2 * Math.PI / 100 * c) - 0.5 * Math.PI;
       that.data.ctx2.arc(w, h, w - 8, -0.5 * Math.PI, num); //每个间隔绘制的弧度
       that.data.ctx2.setStrokeStyle("#ff5000");
       that.data.ctx2.setLineWidth("6");
@@ -26,17 +26,30 @@ export default {
      * end 结束百分比
      * w,h 其实就是圆心横纵坐标
      */
-    canvasTap(start, end, time, w, h) {
+    canvasClockwise(start, end, time, w, h) {
       start++;
       this.setData({
-        curPercentage: start-1
+        curPercentage: start - 1
       })
       if (start > end) {
         return false;
       }
       this.run(start, w, h);
       setTimeout(() => {
-        this.canvasTap(start, end, time, w, h);
+        this.canvasClockwise(start, end, time, w, h);
+      }, time);
+    },
+    anticlockwise(start, time, w, h) {
+      start--;
+      this.setData({
+        curPercentage: start
+      })
+      if (start < 1) {
+        return false
+      }
+      this.run(start, w, h);
+      setTimeout(() => {
+        this.anticlockwise(start, time, w, h);
       }, time);
     },
     /**
@@ -44,7 +57,7 @@ export default {
      * percent-----------进度条百分比
      * time--------------画图动画执行的时间  
      */
-    draw: function(id, percent, animTime) {
+    draw: function(id, percent, animTime, counterclockwise = false) {
       const ctx2 = wx.createCanvasContext(id);
       this.setData({
         ctx2: ctx2,
@@ -56,7 +69,11 @@ export default {
         var w = parseInt(rect.width / 2);
         console.log(w)
         var h = parseInt(rect.height / 2);
-        this.canvasTap(0, this.data.percentage, time, w, h)
+        if (counterclockwise === false) {
+          this.canvasClockwise(0, this.data.percentage, time, w, h)
+        } else {
+          this.anticlockwise(this.data.percentage+1, time, w, h)
+        }
       }.bind(this)).exec();
     }
   }

@@ -10,6 +10,6 @@ Page({
   },
   onReady: function () {
     // 获得circle组件
-    this.draw('runCanvas', 1, 1000);
+    this.draw('runCanvas', 100, 1000,false);
   }
 })
