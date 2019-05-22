@@ -3,6 +3,7 @@ export default {
     curPercentage: '',
     percentage: '', //百分比
     animTime: '', // 动画执行时间
+    showCanvas: true //画布的显示与隐藏
   },
   options: {
     // 绘制圆形进度条方法
@@ -39,12 +40,17 @@ export default {
         this.canvasClockwise(start, end, time, w, h);
       }, time);
     },
-    anticlockwise(start, time, w, h) {
+    anticlockwise(start, time, w, h, endTime) {
       start--;
       this.setData({
         curPercentage: start
       })
       if (start < 1) {
+        setTimeout(() => {
+          this.setData({
+            showCanvas: false
+          })
+        }, this.data.animTime)
         return false
       }
       this.run(start, w, h);
@@ -67,12 +73,11 @@ export default {
       var time = this.data.animTime / this.data.percentage;
       wx.createSelectorQuery().select('#' + id).boundingClientRect(function(rect) { //监听canvas的宽高
         var w = parseInt(rect.width / 2);
-        console.log(w)
         var h = parseInt(rect.height / 2);
         if (counterclockwise === false) {
           this.canvasClockwise(0, this.data.percentage, time, w, h)
         } else {
-          this.anticlockwise(this.data.percentage+1, time, w, h)
+          this.anticlockwise(this.data.percentage + 1, time, w, h)
         }
       }.bind(this)).exec();
     }
