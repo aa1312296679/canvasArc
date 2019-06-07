@@ -1,6 +1,6 @@
 <view class='canvasBox'>
   <view class='bigCircle'></view>
   <view class='littleCircle'></view>
-   <canvas style="{{!showCanvas?'display:none':''}}" canvas-id="runCanvas" id="runCanvas" class='canvas'></canvas>
+   <canvas wx:if="{{showCanvas}}" canvas-id="runCanvas" id="runCanvas" class='canvas'></canvas>
    <text class='canvas_txt1'>{{curPercentage}}%</text>
 </view>
